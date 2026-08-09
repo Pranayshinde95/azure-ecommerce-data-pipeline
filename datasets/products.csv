@@ -1,0 +1,101 @@
+product_id,category,product_name,price
+PROD0001,furniture,Pro Sofa,540.68
+PROD0002,toys,Ultra Building Blocks,1538.21
+PROD0003,auto_parts,Compact Floor Mats,111.21
+PROD0004,garden_tools,Compact Lawn Mower,1761.18
+PROD0005,auto_parts,Pro Brake Pads,781.58
+PROD0006,books,Eco Cookbook,1716.1
+PROD0007,furniture,Premium Sofa,1872.22
+PROD0008,sports_leisure,Smart Tennis Racket,812.85
+PROD0009,pet_shop,Ultra Pet Bed,307.54
+PROD0010,sports_leisure,Premium Dumbbell Set,1107.08
+PROD0011,garden_tools,Deluxe Lawn Mower,123.6
+PROD0012,computers_accessories,Portable Webcam,1748.03
+PROD0013,garden_tools,Premium Pruning Shears,1826.01
+PROD0014,home_appliances,Compact Air Fryer,1136.95
+PROD0015,baby_products,Eco Baby Monitor,241.77
+PROD0016,office_supplies,Classic Filing Cabinet,1106.58
+PROD0017,electronics,Compact Tablet,805.72
+PROD0018,computers_accessories,Portable Monitor Stand,611.94
+PROD0019,sports_leisure,Deluxe Dumbbell Set,465.58
+PROD0020,beauty_health,Smart Electric Shaver,877.31
+PROD0021,office_supplies,Premium Desk Organizer,879.31
+PROD0022,computers_accessories,Compact Wireless Mouse,1028.8
+PROD0023,garden_tools,Pro Garden Hose,1774.16
+PROD0024,office_supplies,Classic Desk Organizer,712.09
+PROD0025,furniture,Portable Sofa,1341.37
+PROD0026,computers_accessories,Premium Monitor Stand,1274.15
+PROD0027,garden_tools,Compact Garden Hose,1784.84
+PROD0028,furniture,Compact Dining Table,1692.12
+PROD0029,pet_shop,Pro Pet Bed,529.0
+PROD0030,computers_accessories,Deluxe Mechanical Keyboard,399.48
+PROD0031,baby_products,Portable Car Seat,936.29
+PROD0032,office_supplies,Compact Desk Organizer,1210.89
+PROD0033,auto_parts,Premium Air Filter,22.58
+PROD0034,musical_instruments,Smart Keyboard Piano,320.32
+PROD0035,books,Eco Comic Book,1072.65
+PROD0036,home_appliances,Pro Blender,1043.79
+PROD0037,auto_parts,Essential Air Filter,1056.86
+PROD0038,beauty_health,Premium Electric Shaver,596.66
+PROD0039,office_supplies,Deluxe Desk Organizer,411.68
+PROD0040,toys,Deluxe Building Blocks,1485.64
+PROD0041,office_supplies,Essential Printer Ink,1427.92
+PROD0042,office_supplies,Pro Stapler,1855.07
+PROD0043,musical_instruments,Eco Keyboard Piano,62.6
+PROD0044,pet_shop,Eco Pet Carrier,1527.31
+PROD0045,auto_parts,Smart Brake Pads,315.83
+PROD0046,pet_shop,Eco Dog Leash,1659.06
+PROD0047,auto_parts,Classic Spark Plug Set,391.9
+PROD0048,office_supplies,Deluxe Printer Ink,590.88
+PROD0049,musical_instruments,Classic Keyboard Piano,60.48
+PROD0050,toys,Deluxe RC Car,540.79
+PROD0051,home_appliances,Deluxe Microwave,1224.45
+PROD0052,beauty_health,Deluxe Toothbrush,1785.42
+PROD0053,home_appliances,Pro Microwave,1109.73
+PROD0054,sports_leisure,Compact Yoga Mat,1139.84
+PROD0055,fashion_accessories,Eco Wrist Watch,1158.0
+PROD0056,garden_tools,Eco Lawn Mower,1710.57
+PROD0057,toys,Premium Puzzle Set,1351.25
+PROD0058,electronics,Portable Tablet,1309.94
+PROD0059,pet_shop,Deluxe Cat Tree,828.46
+PROD0060,baby_products,Essential Car Seat,607.32
+PROD0061,auto_parts,Smart Car Battery,971.32
+PROD0062,baby_products,Deluxe High Chair,774.02
+PROD0063,sports_leisure,Pro Camping Tent,377.33
+PROD0064,baby_products,Pro High Chair,1175.53
+PROD0065,sports_leisure,Portable Tennis Racket,1586.64
+PROD0066,sports_leisure,Classic Bicycle,825.81
+PROD0067,computers_accessories,Deluxe Monitor Stand,891.94
+PROD0068,books,Portable Cookbook,907.38
+PROD0069,office_supplies,Compact Stapler,550.55
+PROD0070,baby_products,Deluxe Diaper Bag,191.84
+PROD0071,musical_instruments,Smart Keyboard Piano,439.12
+PROD0072,toys,Premium Action Figure,102.97
+PROD0073,books,Compact Comic Book,873.9
+PROD0074,office_supplies,Classic Filing Cabinet,1369.26
+PROD0075,beauty_health,Eco Massager,475.57
+PROD0076,baby_products,Compact Stroller,1482.44
+PROD0077,toys,Portable Action Figure,891.11
+PROD0078,garden_tools,Compact Pruning Shears,875.87
+PROD0079,musical_instruments,Portable Violin,1877.09
+PROD0080,computers_accessories,Ultra USB Hub,1170.14
+PROD0081,pet_shop,Eco Pet Bed,1580.69
+PROD0082,garden_tools,Pro Wheelbarrow,1416.95
+PROD0083,books,Smart Textbook,1432.25
+PROD0084,auto_parts,Portable Air Filter,928.88
+PROD0085,toys,Ultra Puzzle Set,161.88
+PROD0086,sports_leisure,Smart Dumbbell Set,648.64
+PROD0087,office_supplies,Compact Filing Cabinet,276.6
+PROD0088,toys,Pro RC Car,1346.79
+PROD0089,home_appliances,Eco Vacuum Cleaner,639.28
+PROD0090,books,Premium Textbook,405.58
+PROD0091,beauty_health,Essential Massager,1798.28
+PROD0092,electronics,Eco Tablet,914.53
+PROD0093,fashion_accessories,Eco Wrist Watch,1623.8
+PROD0094,auto_parts,Portable Spark Plug Set,1424.22
+PROD0095,garden_tools,Classic Shovel,935.72
+PROD0096,sports_leisure,Ultra Tennis Racket,70.58
+PROD0097,fashion_accessories,Pro Backpack,1599.41
+PROD0098,office_supplies,Essential Stapler,1022.19
+PROD0099,office_supplies,Essential Printer Ink,1079.21
+PROD0100,electronics,Eco Smartphone,271.56

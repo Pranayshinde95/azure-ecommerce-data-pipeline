@@ -1,0 +1,106 @@
+{
+  "linkedServices": [
+    {
+      "name": "LS_ADLS_DataLake",
+      "type": "Microsoft.DataFactory/factories/linkedservices",
+      "properties": {
+        "type": "AzureBlobFS",
+        "description": "Linked service connecting ADF to Azure Data Lake Storage Gen2 (ecommerce data lake)",
+        "annotations": [],
+        "typeProperties": {
+          "url": "https://ecommercedatalakedev.dfs.core.windows.net",
+          "accountKey": {
+            "type": "AzureKeyVaultSecret",
+            "store": {
+              "referenceName": "LS_KeyVault",
+              "type": "LinkedServiceReference"
+            },
+            "secretName": "adls-account-key"
+          }
+        },
+        "connectVia": {
+          "referenceName": "AutoResolveIntegrationRuntime",
+          "type": "IntegrationRuntimeReference"
+        }
+      }
+    },
+    {
+      "name": "LS_KeyVault",
+      "type": "Microsoft.DataFactory/factories/linkedservices",
+      "properties": {
+        "type": "AzureKeyVault",
+        "description": "Linked service to Azure Key Vault used to securely store secrets and connection credentials",
+        "annotations": [],
+        "typeProperties": {
+          "baseUrl": "https://ecommerce-kv-dev.vault.azure.net/"
+        }
+      }
+    },
+    {
+      "name": "LS_AzureDatabricks",
+      "type": "Microsoft.DataFactory/factories/linkedservices",
+      "properties": {
+        "type": "AzureDatabricks",
+        "description": "Linked service connecting ADF to the Azure Databricks workspace used for Bronze/Silver/Gold processing",
+        "annotations": [],
+        "typeProperties": {
+          "domain": "https://adb-1234567890123456.7.azuredatabricks.net",
+          "accessToken": {
+            "type": "AzureKeyVaultSecret",
+            "store": {
+              "referenceName": "LS_KeyVault",
+              "type": "LinkedServiceReference"
+            },
+            "secretName": "databricks-access-token"
+          },
+          "existingClusterId": "0612-184030-pouch123",
+          "newClusterNodeType": null
+        }
+      }
+    },
+    {
+      "name": "LS_SourceFileSystem",
+      "type": "Microsoft.DataFactory/factories/linkedservices",
+      "properties": {
+        "type": "AzureBlobFS",
+        "description": "Linked service pointing to the landing zone container where raw e-commerce CSV files are dropped",
+        "annotations": [],
+        "typeProperties": {
+          "url": "https://ecommercedatalakedev.dfs.core.windows.net",
+          "accountKey": {
+            "type": "AzureKeyVaultSecret",
+            "store": {
+              "referenceName": "LS_KeyVault",
+              "type": "LinkedServiceReference"
+            },
+            "secretName": "adls-account-key"
+          }
+        },
+        "connectVia": {
+          "referenceName": "AutoResolveIntegrationRuntime",
+          "type": "IntegrationRuntimeReference"
+        }
+      }
+    },
+    {
+      "name": "LS_AzureSynapse",
+      "type": "Microsoft.DataFactory/factories/linkedservices",
+      "properties": {
+        "type": "AzureSqlDW",
+        "description": "Linked service connecting ADF to the Azure Synapse Analytics dedicated SQL pool for logging and validation",
+        "annotations": [],
+        "typeProperties": {
+          "connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:ecommerce-synapse-dev.sql.azuresynapse.net,1433;Initial Catalog=ecommerce_sqlpool;User ID=synapseadmin",
+          "password": {
+            "type": "AzureKeyVaultSecret",
+            "store": {
+              "referenceName": "LS_KeyVault",
+              "type": "LinkedServiceReference"
+            },
+            "secretName": "synapse-sql-password"
+          }
+        }
+      }
+    }
+  ]
+}

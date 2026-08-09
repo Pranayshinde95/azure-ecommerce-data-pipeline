@@ -1,0 +1,262 @@
+{
+  "name": "PL_Ecommerce_Bronze_Ingestion",
+  "type": "Microsoft.DataFactory/factories/pipelines",
+  "properties": {
+    "description": "Master pipeline: copies raw e-commerce CSV files from the landing zone into the ADLS Gen2 Bronze layer, triggers the Databricks Bronze->Silver->Gold processing notebook chain, and logs execution status to Synapse for auditing.",
+    "activities": [
+      {
+        "name": "ForEach_Source_Entity",
+        "type": "ForEach",
+        "dependsOn": [],
+        "userProperties": [],
+        "typeProperties": {
+          "items": {
+            "value": "@pipeline().parameters.SourceEntities",
+            "type": "Expression"
+          },
+          "isSequential": false,
+          "batchCount": 5,
+          "activities": [
+            {
+              "name": "Copy_CSV_To_Bronze",
+              "type": "Copy",
+              "dependsOn": [],
+              "policy": {
+                "timeout": "0.01:00:00",
+                "retry": 2,
+                "retryIntervalInSeconds": 30,
+                "secureOutput": false,
+                "secureInput": false
+              },
+              "userProperties": [],
+              "typeProperties": {
+                "source": {
+                  "type": "DelimitedTextSource",
+                  "storeSettings": {
+                    "type": "AzureBlobFSReadSettings",
+                    "recursive": false
+                  },
+                  "formatSettings": {
+                    "type": "DelimitedTextReadSettings"
+                  }
+                },
+                "sink": {
+                  "type": "ParquetSink",
+                  "storeSettings": {
+                    "type": "AzureBlobFSWriteSettings"
+                  },
+                  "formatSettings": {
+                    "type": "ParquetWriteSettings"
+                  }
+                },
+                "enableStaging": false,
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                }
+              },
+              "inputs": [
+                {
+                  "referenceName": "@{item().sourceDataset}",
+                  "type": "DatasetReference"
+                }
+              ],
+              "outputs": [
+                {
+                  "referenceName": "DS_Bronze_Parquet_Sink",
+                  "type": "DatasetReference",
+                  "parameters": {
+                    "entityName": "@item().entityName"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "name": "Notebook_Bronze_Layer",
+        "type": "DatabricksNotebook",
+        "dependsOn": [
+          {
+            "activity": "ForEach_Source_Entity",
+            "dependencyConditions": ["Succeeded"]
+          }
+        ],
+        "policy": {
+          "timeout": "0.02:00:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 60,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "notebookPath": "/Repos/ecommerce-pipeline/databricks/bronze_layer",
+          "baseParameters": {
+            "run_date": {
+              "value": "@formatDateTime(utcnow(), 'yyyy-MM-dd')",
+              "type": "Expression"
+            },
+            "input_path": "abfss://raw@ecommercedatalakedev.dfs.core.windows.net/landing/ecommerce",
+            "output_path": "abfss://datalake@ecommercedatalakedev.dfs.core.windows.net/bronze"
+          }
+        },
+        "linkedServiceName": {
+          "referenceName": "LS_AzureDatabricks",
+          "type": "LinkedServiceReference"
+        }
+      },
+      {
+        "name": "Notebook_Silver_Layer",
+        "type": "DatabricksNotebook",
+        "dependsOn": [
+          {
+            "activity": "Notebook_Bronze_Layer",
+            "dependencyConditions": ["Succeeded"]
+          }
+        ],
+        "policy": {
+          "timeout": "0.02:00:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 60,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "notebookPath": "/Repos/ecommerce-pipeline/databricks/silver_layer",
+          "baseParameters": {
+            "run_date": {
+              "value": "@formatDateTime(utcnow(), 'yyyy-MM-dd')",
+              "type": "Expression"
+            },
+            "bronze_path": "abfss://datalake@ecommercedatalakedev.dfs.core.windows.net/bronze",
+            "silver_path": "abfss://datalake@ecommercedatalakedev.dfs.core.windows.net/silver"
+          }
+        },
+        "linkedServiceName": {
+          "referenceName": "LS_AzureDatabricks",
+          "type": "LinkedServiceReference"
+        }
+      },
+      {
+        "name": "Notebook_Gold_Layer",
+        "type": "DatabricksNotebook",
+        "dependsOn": [
+          {
+            "activity": "Notebook_Silver_Layer",
+            "dependencyConditions": ["Succeeded"]
+          }
+        ],
+        "policy": {
+          "timeout": "0.02:00:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 60,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "notebookPath": "/Repos/ecommerce-pipeline/databricks/gold_layer",
+          "baseParameters": {
+            "run_date": {
+              "value": "@formatDateTime(utcnow(), 'yyyy-MM-dd')",
+              "type": "Expression"
+            },
+            "silver_path": "abfss://datalake@ecommercedatalakedev.dfs.core.windows.net/silver",
+            "gold_path": "abfss://datalake@ecommercedatalakedev.dfs.core.windows.net/gold"
+          }
+        },
+        "linkedServiceName": {
+          "referenceName": "LS_AzureDatabricks",
+          "type": "LinkedServiceReference"
+        }
+      },
+      {
+        "name": "Log_Pipeline_Success",
+        "type": "Copy",
+        "dependsOn": [
+          {
+            "activity": "Notebook_Gold_Layer",
+            "dependencyConditions": ["Succeeded"]
+          }
+        ],
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlDWSource",
+            "sqlReaderQuery": "SELECT '@{pipeline().RunId}' AS pipeline_run_id, '@{pipeline().Pipeline}' AS pipeline_name, 'Full_Run' AS activity_name, 'Succeeded' AS status, '@{pipeline().TriggerTime}' AS start_time, GETDATE() AS end_time, 675 AS rows_processed, NULL AS error_message"
+          },
+          "sink": {
+            "type": "AzureSqlDWSink",
+            "writeBehavior": "Insert"
+          }
+        },
+        "inputs": [
+          { "referenceName": "DS_PipelineLog_Synapse", "type": "DatasetReference" }
+        ],
+        "outputs": [
+          { "referenceName": "DS_PipelineLog_Synapse", "type": "DatasetReference" }
+        ]
+      },
+      {
+        "name": "Log_Pipeline_Failure",
+        "type": "Copy",
+        "dependsOn": [
+          {
+            "activity": "Notebook_Gold_Layer",
+            "dependencyConditions": ["Failed"]
+          }
+        ],
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlDWSource",
+            "sqlReaderQuery": "SELECT '@{pipeline().RunId}' AS pipeline_run_id, '@{pipeline().Pipeline}' AS pipeline_name, 'Full_Run' AS activity_name, 'Failed' AS status, '@{pipeline().TriggerTime}' AS start_time, GETDATE() AS end_time, 0 AS rows_processed, 'Gold layer notebook execution failed' AS error_message"
+          },
+          "sink": {
+            "type": "AzureSqlDWSink",
+            "writeBehavior": "Insert"
+          }
+        },
+        "inputs": [
+          { "referenceName": "DS_PipelineLog_Synapse", "type": "DatasetReference" }
+        ],
+        "outputs": [
+          { "referenceName": "DS_PipelineLog_Synapse", "type": "DatasetReference" }
+        ]
+      }
+    ],
+    "parameters": {
+      "SourceEntities": {
+        "type": "array",
+        "defaultValue": [
+          { "entityName": "customers", "sourceDataset": "DS_Source_Customers_CSV" },
+          { "entityName": "orders", "sourceDataset": "DS_Source_Orders_CSV" },
+          { "entityName": "products", "sourceDataset": "DS_Source_Products_CSV" },
+          { "entityName": "order_items", "sourceDataset": "DS_Source_OrderItems_CSV" },
+          { "entityName": "sellers", "sourceDataset": "DS_Source_Sellers_CSV" }
+        ]
+      }
+    },
+    "annotations": ["ecommerce", "medallion-architecture", "production"],
+    "folder": {
+      "name": "Ecommerce/Pipelines"
+    }
+  }
+}

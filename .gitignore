@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.Python
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Databricks
+.databricks/
+*.dbc
+
+# Spark
+spark-warehouse/
+metastore_db/
+derby.log
+
+# Environment / secrets
+.env
+.env.*
+*.pem
+*.key
+secrets.json
+local.settings.json
+
+# Azure / Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data (large/local outputs only — sample datasets in /datasets are tracked)
+/output/
+*.parquet
+*.snappy.parquet
+
+# Logs
+*.log
+logs/
